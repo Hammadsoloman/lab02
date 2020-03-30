@@ -10,7 +10,7 @@ Finish time: distributor
 
 Actual time needed to complete: 2.5 // cause the i stck in something that related in setup
 
-
+**********************************************************************************
 
 Number and name of feature: #2: Filter images
 
@@ -22,6 +22,7 @@ Finish time: distributor
 
 Actual time needed to complete: 2
 
+**************************************************************************************
 
 Number and name of feature:#3: Style the application
 
