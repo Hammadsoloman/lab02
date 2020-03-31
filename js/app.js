@@ -1,42 +1,73 @@
 'use strict';
 
 $(document).ready(function () {
+    let zooArr = [];
+    
+    const readJson = () => {
+    $.ajax('./data/page-1.json').then(data => {
+        data.forEach(animal => {
+            let ZooObj = new Zoo(animal);
+            // console.log(ZooObj);
+            ZooObj.render();
+        });
+        renderList();
+        fillterByKeyword();
+
+    });
+    };
+     readJson(); 
+  
     function Zoo(ZooObj) {
         this.image_url = ZooObj.image_url;
         this.title = ZooObj.title;
         this.description = ZooObj.description;
         this.keyword = ZooObj.keyword;
         this.horns = ZooObj.horns;
-        Zoo.all.push(this);
+        zooArr.push(this);
     }
-     Zoo.all = [];
-     console.log(Zoo.all);
+
+
+    function renderList() {
+
+        let arrKeywords = [];
+        zooArr.forEach(val => {
+            if (!arrKeywords.includes(val.keyword)) {
+                arrKeywords.push(val.keyword);
+            }
+        });
+    
+        arrKeywords.forEach((val) => {
+            $('#cataloge').append(`<option value="${val}"> ${val} </option>`);
+    
+        });
+    }
+
      
     Zoo.prototype.render = function () {
-        let $callAnimal = $('#photo-template').clone();
+        let $callAnimal = $('.photo-template').clone();
+        $callAnimal.removeAttr('class');
         $callAnimal.find('h2').text(this.title);
         $callAnimal.find('img').attr('src', this.image_url);
         $callAnimal.find('p').text(this.description);
-        $callAnimal.removeAttr('id');
-        $callAnimal.attr('id', this.title);
+        $callAnimal.attr('class', this.keyword);
         $('main').append($callAnimal);
      
+    }    
+
+    function fillterByKeyword() {
+        $('select').on('change', function () {
+            $('section').hide();
+            let selected = $(this).val();
+            console.log(selected);
+            $(`.${selected}`).fadeIn();
+            // zooArr.forEach(val => {
+            //     if (val.keyword === selected) {
+            //         $(`section[class='${selected}']`).fadeIn();
+            //     }
+            // })
+        })
     }
 
-    Zoo.prototype.renderList = function () {
-      let $animalOption = $('<option></option>').text(this.title);
-      $animalOption.attr('value',this.keyword)
-      $('select').append($animalOption);   
-  }
+
     
-    const readJson = () => {
-        $.ajax('data/page-1.json', { method: 'GET', dataType: 'JSON' }).then(data => {
-            data.forEach(animal => {
-                let ZooObj = new Zoo(animal);
-                ZooObj.render();
-                ZooObj.renderList();
-            });
-        });
-    };
-    readJson();
 });
